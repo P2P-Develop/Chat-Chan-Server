@@ -32,11 +32,8 @@ public class CallThread extends  Thread
         player.name = "Unknown";
         try
         {
-
-            InputStream stream = socket.getInputStream();
-
             player.ip = socket.getRemoteSocketAddress().toString();
-            BufferedReader read = new BufferedReader(new InputStreamReader(stream));
+            BufferedReader read = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter send = new PrintWriter(socket.getOutputStream(), true);
             ObjectMapper mapper = new ObjectMapper();
             while(true)
@@ -44,7 +41,7 @@ public class CallThread extends  Thread
                 if (socket.isClosed())
                     break;
                 byte[] data = new byte[1];
-                if (stream.read(data, 0, 1) == -1)
+                if (socket.getInputStream().read(data, 0, 1) == -1)
                     break;
                 try
                 {
@@ -62,8 +59,7 @@ public class CallThread extends  Thread
                             case "join":
                                 if (root.get("name").isNull())
                                 {
-                                    String response = Main.playerList.join(player, "");
-                                    send.println(response);
+                                    send.println(Main.playerList.join(player, ""));
                                     socket.close();
                                     break;
                                 }
@@ -87,8 +83,7 @@ public class CallThread extends  Thread
                                             (cTime.get(Calendar.MINUTE) * cTime.get(Calendar.YEAR)) * 0x4307a7L +
                                             (cTime.get(Calendar.MILLISECOND) * 0xf7defL) ^ 0x3ad8025f;
                                     seed = (seed * 0x5DEECE66DL + 0xBL) & 0xFFFFFFFFFFFFL;
-                                    int cs = ((int) (seed >> 17)) % 62;
-                                    encryptKey = encryptKey + (IntToString.getStringFromInt(cs));
+                                    encryptKey = encryptKey + (IntToString.getStringFromInt(((int) (seed >> 17)) % 62));
                                 }
                                 System.out.println("OK");
                                 Main.logger.info("[ECGM] Generating Decrypt key...");
@@ -108,17 +103,14 @@ public class CallThread extends  Thread
                                             (cTime.get(Calendar.YEAR) * cTime.get(Calendar.SECOND)) * 0x4307a7L +
                                             (cTime.get(Calendar.MONTH) * 0x5f24f) ^ 0x3ad8025f;
                                     seed = (seed * 0x5DEECE66DL + 0xBL) & 0xFFFFFFFFFFFFL;
-                                    int cs = ((int) (seed >> 17)) % 62;
-                                    decryptKey = decryptKey + (IntToString.getStringFromInt(cs));
+                                    decryptKey = decryptKey + (IntToString.getStringFromInt(((int) (seed >> 17)) % 62));
                                 }
                                 System.out.println("OK");
                                 player.encryptKey = encryptKey;
                                 player.decryptKey = decryptKey;
                                 String message = Main.playerList.join(player);
                                 ObjectMapper mappers = new ObjectMapper();
-                                JsonNode node = mappers.readTree(message);
-                                int code = node.get("code").asInt();
-                                if (code == 200)
+                                if (mappers.readTree(message).get("code").asInt() == 200)
                                 {
                                     send.println(message);
                                 }
@@ -131,18 +123,17 @@ public class CallThread extends  Thread
                             case "leave":
                                 if (player != null)
                                 {
-                                    String response =  Main.playerList.leave(player);
-                                    send.println(response);
+                                    send.println(Main.playerList.leave(player));
                                     socket.close();
                                     break;
                                 }
                                 break;
                             case "send":
-                                PlayerList players = Main.playerList;
-                                for (Player player : players.getPlayers())
+                                for (Player player : Main.playerList.getPlayers())
                                 {
                                     try
                                     {
+                                        // 注意: 未使用の変数が発見されました。
                                         PrintWriter cSend = new PrintWriter(socket.getOutputStream(), true);
                                         String encryptedMessage = root.get("message").asText();
 
