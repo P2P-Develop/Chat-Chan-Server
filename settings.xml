@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
-<properties>
-<comment>edit option</comment>
-<entry key="commandPort">46573</entry>
-<entry key="callPort">41410</entry>
-<entry key="chatPort">37564</entry>
-<entry key="ip">0.0.0.0</entry>
-</properties>

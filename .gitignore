@@ -1,5 +1,4 @@
-/.idea
-/target
+target/
 settings.xml
 whitelist.xml
-/log
+log/
