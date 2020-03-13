@@ -12,11 +12,9 @@ public class EncryptManager
 {
     public static String encrypt(String text, String key) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException
     {
-        SecretKeySpec spec = new SecretKeySpec(key.getBytes(), "Blowfish");
         Cipher cipher = Cipher.getInstance("Blowfish");
-        cipher.init(Cipher.ENCRYPT_MODE, spec);
-        byte[] ecb = cipher.doFinal(text.getBytes());
-        return new String(ecb);
+        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key.getBytes(), "Blowfish"));
+        return new String(cipher.doFinal(text.getBytes()););
     }
 
 }
