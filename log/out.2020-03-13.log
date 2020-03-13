@@ -1,0 +1,43 @@
+03:51:04.295 [INFO] [SYSTEM] Loading library...
+03:51:04.593 [INFO] [SYSTEM] Loading ConfigFiles...
+03:51:04.593 [INFO] [SYSTEM] Parsing ConfigFiles...
+03:51:04.629 [INFO] [SYSTEM] Loading WhiteListFiles...
+03:51:04.630 [INFO] [SYSTEM] Reading WhiteListFiles...
+03:51:04.630 [INFO] [SYSTEM] Definition call server...
+03:51:04.630 [INFO] [SYSTEM] Definition chat server...
+03:51:04.630 [INFO] [SYSTEM] Starting call server...
+03:51:04.633 [INFO] [SYSTEM] Starting chat server...
+03:51:04.656 [INFO] [SYSTEM] See help command for showing help.
+
+03:51:04.657 [INFO] [SYSTEM] Ready
+
+03:51:40.760 [INFO] [SYSTEM] ---HELP---
+
+03:51:40.760 [INFO] [SYSTEM] # help -- showing help.
+
+03:51:40.761 [INFO] [SYSTEM] # stop -- stopping all server.
+
+03:51:40.761 [INFO] [SYSTEM] # kick <PlayerName> -- player kick from all server.
+
+03:51:40.761 [INFO] [RESULT] OK.
+
+03:51:43.944 [INFO] [SYSTEM] Unknown Command. See help command for showing help.
+
+03:51:43.947 [INFO] [RESULT] OK.
+
+03:51:45.789 [INFO] [SYSTEM] ---PlayerList---
+
+03:51:45.789 [INFO] [SYSTEM] N/A
+
+03:51:45.789 [INFO] [SYSTEM] 0/2
+
+03:51:45.789 [INFO] [RESULT] OK.
+
+03:51:47.431 [INFO] [SYSTEM] Unknown Command. See help command for showing help.
+
+03:51:47.431 [INFO] [RESULT] OK.
+
+03:51:49.115 [INFO] [CALL] Stopping server...
+03:51:49.116 [INFO] [CHAT] Stopping server...
+03:51:49.117 [INFO] [FATAL] Stopping system...
+
