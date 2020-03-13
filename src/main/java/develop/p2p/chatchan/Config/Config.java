@@ -19,8 +19,7 @@ public class Config
         FileOutputStream out = null;
         try
         {
-            out = new FileOutputStream("settings.xml");
-            settings.storeToXML(out, "edit option");
+            settings.storeToXML(new FileOutputStream("settings.xml"), "edit option");
         }
         catch (Exception e)
         {
