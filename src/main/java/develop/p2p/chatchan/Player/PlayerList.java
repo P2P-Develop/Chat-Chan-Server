@@ -24,25 +24,21 @@ public class PlayerList
             port[1] = Main.commandPort;
             for (Player players : this.player)
             {
-                String names = players.name;
-                if (names.equals(player.name))
+                if (players.name.equals(player.name))
                 {
                     port[0] = 0;
                     port[1] = 0;
-                    JoinParser parser = new JoinParser(402, port, this.player.size(), "", "", "");
-                    return mapper.writeValueAsString(parser);
+                    return mapper.writeValueAsString(new JoinParser(402, port, this.player.size(), "", "", ""));
                 }
             }
             UUID id = UUID.randomUUID();
-            JoinParser parser = new JoinParser(200, port, this.player.size(), id.toString(), player.encryptKey, player.decryptKey);
             player.token = id.toString();
             this.player.add(player);
-            return mapper.writeValueAsString(parser);
+            return mapper.writeValueAsString(new JoinParser(200, port, this.player.size(), id.toString(), player.encryptKey, player.decryptKey));
         }
         else
         {
-            JoinParser parser = new JoinParser(401, port, this.player.size(), "", "", "");
-            return mapper.writeValueAsString(parser);
+            return mapper.writeValueAsString(new JoinParser(401, port, this.player.size(), "", "", ""));
         }
     }
 
@@ -51,14 +47,12 @@ public class PlayerList
         int code = 403;
         if (player.token.equals(token))
             code = 200;
-        NotCallJoinParser parser = new NotCallJoinParser(code, this.player.size());
-        return mapper.writeValueAsString(parser);
+        return mapper.writeValueAsString(new NotCallJoinParser(code, this.player.size()));
     }
     public String leave(Player player) throws JsonProcessingException
     {
         this.player.remove(player);
-        LeaveParser parser = new LeaveParser(200);
-        return mapper.writeValueAsString(parser);
+        return mapper.writeValueAsString(new LeaveParser(200));
     }
 
     public int size()
