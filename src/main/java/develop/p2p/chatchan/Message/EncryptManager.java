@@ -14,7 +14,8 @@ public class EncryptManager
     {
         Cipher cipher = Cipher.getInstance("Blowfish");
         cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key.getBytes(), "Blowfish"));
-        return new String(cipher.doFinal(text.getBytes()););
+        key = new String(cipher.doFinal(text.getBytes()););
+        return key;
     }
 
 }
