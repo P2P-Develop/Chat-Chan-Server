@@ -45,8 +45,7 @@ public class CallThread extends  Thread
                     break;
                 try
                 {
-                    String line;
-                    line = read.readLine();
+                    String line = read.readLine();
                     line.length(); //isNull
                     line = "{" + line;
                     line = line.replace("\n", "").replace("\r", "");
@@ -170,19 +169,6 @@ public class CallThread extends  Thread
             if (player == null || player.name == null)
             {
                 Main.logger.info("[CALL] Client Disconnected: Unknown(" + socket.getRemoteSocketAddress().toString() + ")\n");
-                if (player != null)
-                {
-                    try
-                    {
-                        Main.playerList.leave(player);
-                    }
-                    catch (JsonProcessingException e)
-                    {
-
-                        Main.logger.error("[CALL] Error:");
-                        e.printStackTrace();
-                    }
-                }
                 try
                 {
                     if (socket != null)
@@ -192,6 +178,18 @@ public class CallThread extends  Thread
                 {
                 }
                 return;
+            }
+            else if (player != null)
+            {
+                try
+                {
+                    Main.playerList.leave(player);      
+                }
+                catch (JsonProcessingException e)
+                {
+                    Main.logger.error("[CALL] Error:");
+                    e.printStackTrace();
+                }
             }
             Main.logger.info("[CALL] Client Disconnected: " + player.name + "(" + player.ip.replace("/", "") + ")\n");
             try
