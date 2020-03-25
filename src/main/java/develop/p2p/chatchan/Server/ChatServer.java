@@ -15,12 +15,10 @@ public class ChatServer
         try (ServerSocket listener = new ServerSocket())
         {
             listener.setReuseAddress(true);
-            InetSocketAddress address = new InetSocketAddress(port);
-            listener.bind(address);
+            listener.bind(new InetSocketAddress(port));
             while (true)
             {
-                Socket socket = listener.accept();
-                ChatThread thread  = new ChatThread(socket);
+                ChatThread thread  = new ChatThread(listener.accept());
                 thread.start();
             }
         }

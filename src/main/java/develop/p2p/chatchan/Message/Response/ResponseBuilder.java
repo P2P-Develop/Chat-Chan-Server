@@ -7,8 +7,7 @@ public class ResponseBuilder
 {
     public static String getResponse(int code) throws JsonProcessingException
     {
-        Response response = new Response(code);
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(response);
+        return mapper.writeValueAsString(new Response(code));
     }
 }
