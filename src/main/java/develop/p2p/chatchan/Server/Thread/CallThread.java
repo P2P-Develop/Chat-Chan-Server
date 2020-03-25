@@ -32,8 +32,11 @@ public class CallThread extends  Thread
         player.name = "Unknown";
         try
         {
+
+            InputStream stream = socket.getInputStream();
+
             player.ip = socket.getRemoteSocketAddress().toString();
-            BufferedReader read = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            BufferedReader read = new BufferedReader(new InputStreamReader(stream));
             PrintWriter send = new PrintWriter(socket.getOutputStream(), true);
             ObjectMapper mapper = new ObjectMapper();
             while(true)
@@ -41,11 +44,12 @@ public class CallThread extends  Thread
                 if (socket.isClosed())
                     break;
                 byte[] data = new byte[1];
-                if (socket.getInputStream().read(data, 0, 1) == -1)
+                if (stream.read(data, 0, 1) == -1)
                     break;
                 try
                 {
-                    String line = read.readLine();
+                    String line;
+                    line = read.readLine();
                     line.length(); //isNull
                     line = "{" + line;
                     line = line.replace("\n", "").replace("\r", "");
@@ -58,7 +62,8 @@ public class CallThread extends  Thread
                             case "join":
                                 if (root.get("name").isNull())
                                 {
-                                    send.println(Main.playerList.join(player, ""));
+                                    String response = Main.playerList.join(player, "");
+                                    send.println(response);
                                     socket.close();
                                     break;
                                 }
@@ -82,7 +87,8 @@ public class CallThread extends  Thread
                                             (cTime.get(Calendar.MINUTE) * cTime.get(Calendar.YEAR)) * 0x4307a7L +
                                             (cTime.get(Calendar.MILLISECOND) * 0xf7defL) ^ 0x3ad8025f;
                                     seed = (seed * 0x5DEECE66DL + 0xBL) & 0xFFFFFFFFFFFFL;
-                                    encryptKey = encryptKey + (IntToString.getStringFromInt(((int) (seed >> 17)) % 62));
+                                    int cs = ((int) (seed >> 17)) % 62;
+                                    encryptKey = encryptKey + (IntToString.getStringFromInt(cs));
                                 }
                                 System.out.println("OK");
                                 Main.logger.info("[ECGM] Generating Decrypt key...");
@@ -102,14 +108,17 @@ public class CallThread extends  Thread
                                             (cTime.get(Calendar.YEAR) * cTime.get(Calendar.SECOND)) * 0x4307a7L +
                                             (cTime.get(Calendar.MONTH) * 0x5f24f) ^ 0x3ad8025f;
                                     seed = (seed * 0x5DEECE66DL + 0xBL) & 0xFFFFFFFFFFFFL;
-                                    decryptKey = decryptKey + (IntToString.getStringFromInt(((int) (seed >> 17)) % 62));
+                                    int cs = ((int) (seed >> 17)) % 62;
+                                    decryptKey = decryptKey + (IntToString.getStringFromInt(cs));
                                 }
                                 System.out.println("OK");
                                 player.encryptKey = encryptKey;
                                 player.decryptKey = decryptKey;
                                 String message = Main.playerList.join(player);
                                 ObjectMapper mappers = new ObjectMapper();
-                                if (mappers.readTree(message).get("code").asInt() == 200)
+                                JsonNode node = mappers.readTree(message);
+                                int code = node.get("code").asInt();
+                                if (code == 200)
                                 {
                                     send.println(message);
                                 }
@@ -122,17 +131,18 @@ public class CallThread extends  Thread
                             case "leave":
                                 if (player != null)
                                 {
-                                    send.println(Main.playerList.leave(player));
+                                    String response =  Main.playerList.leave(player);
+                                    send.println(response);
                                     socket.close();
                                     break;
                                 }
                                 break;
                             case "send":
-                                for (Player player : Main.playerList.getPlayers())
+                                PlayerList players = Main.playerList;
+                                for (Player player : players.getPlayers())
                                 {
                                     try
                                     {
-                                        // 注意: 未使用の変数が発見されました。
                                         PrintWriter cSend = new PrintWriter(socket.getOutputStream(), true);
                                         String encryptedMessage = root.get("message").asText();
 
@@ -169,6 +179,19 @@ public class CallThread extends  Thread
             if (player == null || player.name == null)
             {
                 Main.logger.info("[CALL] Client Disconnected: Unknown(" + socket.getRemoteSocketAddress().toString() + ")\n");
+                if (player != null)
+                {
+                    try
+                    {
+                        Main.playerList.leave(player);
+                    }
+                    catch (JsonProcessingException e)
+                    {
+
+                        Main.logger.error("[CALL] Error:");
+                        e.printStackTrace();
+                    }
+                }
                 try
                 {
                     if (socket != null)
@@ -178,18 +201,6 @@ public class CallThread extends  Thread
                 {
                 }
                 return;
-            }
-            else if (player != null)
-            {
-                try
-                {
-                    Main.playerList.leave(player);      
-                }
-                catch (JsonProcessingException e)
-                {
-                    Main.logger.error("[CALL] Error:");
-                    e.printStackTrace();
-                }
             }
             Main.logger.info("[CALL] Client Disconnected: " + player.name + "(" + player.ip.replace("/", "") + ")\n");
             try
