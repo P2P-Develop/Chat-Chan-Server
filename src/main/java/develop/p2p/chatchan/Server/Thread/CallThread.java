@@ -3,16 +3,12 @@ package develop.p2p.chatchan.Server.Thread;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import develop.p2p.chatchan.IntToString;
 import develop.p2p.chatchan.Main;
-import develop.p2p.chatchan.Message.Response.ResponseBuilder;
+import develop.p2p.chatchan.Message.EncryptManager;
 import develop.p2p.chatchan.Player.Player;
-import develop.p2p.chatchan.Player.PlayerList;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Calendar;
-import java.util.Random;
 
 public class CallThread extends  Thread
 {
@@ -68,49 +64,13 @@ public class CallThread extends  Thread
                                     break;
                                 }
                                 player.name = root.get("name").asText();
-                                String encryptKey = "";
-                                String decryptKey = "";
+                                String encryptKey;
+                                String decryptKey;
                                 Main.logger.info("[ECGM] Generating Encrypt key...");
-                                for (int ii = 0; ii < Main.keyLength; ii++)
-                                {
-                                    Random random = new Random();
-                                    long seed = 314L;
-                                    do
-                                    {
-                                        seed = seed + ((seed ^ 0x5DEECE66DL + 0xBL) & (0xFFFFFFFFFFFFL)) * new Random().nextLong();
-                                    }
-                                    while((new Random(random.nextInt(24)).nextInt(1024) > 999));
-                                    Calendar cTime = Calendar.getInstance();
-                                    seed = seed +
-                                            (cTime.get(Calendar.SECOND) * cTime.get(Calendar.HOUR) * 0x7c8a3b4L) +
-                                            (cTime.get(Calendar.SECOND) * 0x3a4bdeL) +
-                                            (cTime.get(Calendar.MINUTE) * cTime.get(Calendar.YEAR)) * 0x4307a7L +
-                                            (cTime.get(Calendar.MILLISECOND) * 0xf7defL) ^ 0x3ad8025f;
-                                    seed = (seed * 0x5DEECE66DL + 0xBL) & 0xFFFFFFFFFFFFL;
-                                    int cs = ((int) (seed >> 17)) % 62;
-                                    encryptKey = encryptKey + (IntToString.getStringFromInt(cs));
-                                }
+                                encryptKey = EncryptManager.generateEncryptKey();
                                 System.out.println("OK");
                                 Main.logger.info("[ECGM] Generating Decrypt key...");
-                                for (int ii = 0; ii < Main.keyLength; ii++)
-                                {
-                                    Random random = new Random();
-                                    long seed = 314L;
-                                    do
-                                    {
-                                        seed = seed + ((seed ^ 0x5DEECE66DL + 0xBL) & (0xFFFFFFFFFFFFL)) * new Random().nextLong();
-                                    }
-                                    while((new Random(random.nextInt(24)).nextInt(1024) > 999));
-                                    Calendar cTime = Calendar.getInstance();
-                                    seed = seed +
-                                            (cTime.get(Calendar.HOUR) * cTime.get(Calendar.MINUTE) * 0x4c1906) +
-                                            (cTime.get(Calendar.MILLISECOND) * 0x5ac0db) +
-                                            (cTime.get(Calendar.YEAR) * cTime.get(Calendar.SECOND)) * 0x4307a7L +
-                                            (cTime.get(Calendar.MONTH) * 0x5f24f) ^ 0x3ad8025f;
-                                    seed = (seed * 0x5DEECE66DL + 0xBL) & 0xFFFFFFFFFFFFL;
-                                    int cs = ((int) (seed >> 17)) % 62;
-                                    decryptKey = decryptKey + (IntToString.getStringFromInt(cs));
-                                }
+                                decryptKey = EncryptManager.generateDecryptKey();
                                 System.out.println("OK");
                                 player.encryptKey = encryptKey;
                                 player.decryptKey = decryptKey;
@@ -119,9 +79,7 @@ public class CallThread extends  Thread
                                 JsonNode node = mappers.readTree(message);
                                 int code = node.get("code").asInt();
                                 if (code == 200)
-                                {
                                     send.println(message);
-                                }
                                 else
                                 {
                                     socket.close();
@@ -135,22 +93,6 @@ public class CallThread extends  Thread
                                     send.println(response);
                                     socket.close();
                                     break;
-                                }
-                                break;
-                            case "send":
-                                PlayerList players = Main.playerList;
-                                for (Player player : players.getPlayers())
-                                {
-                                    try
-                                    {
-                                        PrintWriter cSend = new PrintWriter(socket.getOutputStream(), true);
-                                        String encryptedMessage = root.get("message").asText();
-
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        send.println(ResponseBuilder.getResponse(405));
-                                    }
                                 }
                                 break;
                             default:
