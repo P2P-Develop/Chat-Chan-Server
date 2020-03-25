@@ -1,0 +1,72 @@
+package develop.p2p.chatchan.Command.Comands;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import develop.p2p.chatchan.Command.EnumCommandOutput;
+import develop.p2p.chatchan.Command.InterfaceCommand;
+import develop.p2p.chatchan.Main;
+import develop.p2p.chatchan.Player.Player;
+import develop.p2p.chatchan.Response.Kicked;
+import org.slf4j.Logger;
+
+import java.net.Socket;
+import java.util.ArrayList;
+
+public class CommandKick implements InterfaceCommand
+{
+    @Override
+    public String getName()
+    {
+        return "kick";
+    }
+
+    @Override
+    public EnumCommandOutput execute(Player sender, String commandName, ArrayList<String> args, Logger logger) throws Exception
+    {
+        String kickedMessage = "Kicked from LOCAL_ADMIN.";
+        if (args.size() == 3)
+            kickedMessage = args.get(2);
+        else if (args.size() != 2)
+        {
+            logger.info("[SYSTEM] Unknown Args. See help command for showing help.\n");
+            return EnumCommandOutput.FAILED;
+        }
+
+        Player player = Main.playerList.getPlayerFromName(args.get(1));
+        if (player == null)
+        {
+            logger.error("[SYSTEM] Player not found.\n");
+            return EnumCommandOutput.FAILED;
+        }
+
+        Socket chatSocket = player.chatSocket;
+        Socket commandSocket = player.commandSocket;
+        Socket callSocket = player.callSocket;
+        boolean chatFlag = false;
+        boolean commandFlag = false;
+        boolean callFlag = false;
+
+        if (chatSocket != null)
+        {
+            Kicked kicked = new Kicked(500, kickedMessage);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.writeValueAsString(kicked);
+            chatSocket.close();
+            chatFlag = true;
+        }
+
+        if (commandSocket != null)
+        {
+            commandSocket.close();
+            commandFlag = true;
+        }
+
+        if (callSocket != null)
+        {
+            callSocket.close();
+            callFlag = true;
+        }
+
+        logger.info(String.format("[SYSTEM] Player(%s) kicked from %s%s%s\n", args.get(1), chatFlag ? "ChatServer ": "", commandFlag ? "CommandServer ": "", callFlag ? "CallServer ": ""));
+        return EnumCommandOutput.OK;
+    }
+}

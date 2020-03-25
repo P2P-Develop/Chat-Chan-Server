@@ -3,20 +3,29 @@ package develop.p2p.chatchan.Server.Thread;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import develop.p2p.chatchan.JsonObj;
+import develop.p2p.chatchan.util.JsonObj;
 import develop.p2p.chatchan.Main;
+import develop.p2p.chatchan.Message.EncryptManager;
+import develop.p2p.chatchan.Message.MessageSender;
+import develop.p2p.chatchan.Message.Response.ResponseBuilder;
 import develop.p2p.chatchan.Player.Player;
+import develop.p2p.chatchan.Player.PlayerList;
+import org.slf4j.Logger;
 
 import java.io.*;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class ChatThread extends  Thread
 {
-    public Player player;
-    public Socket socket;
+    private Player player;
+    private Socket socket;
+    private Logger logger;
     public ChatThread(Socket socket)
     {
         this.socket = socket;
+        this.logger = Main.logger;
     }
 
     @Override
@@ -39,7 +48,7 @@ public class ChatThread extends  Thread
                     break;
                 String line = new String(data);
                 line += read.readLine();
-                Main.logger.info("[CHAT] Text from client: " + line + "\n");
+                logger.info("[CHAT] Text from client: " + line + "\n");
                 if (JsonObj.isJson(line))
                 {
                     JsonNode node = mapper.readTree(line);
@@ -83,6 +92,44 @@ public class ChatThread extends  Thread
                             send.println("{\"code\": 200}");
                             socket.close();
                             break;
+                        case "send":
+                            Player sender = Main.playerList.getPlayerFromName(node.get("name").asText());
+                            boolean stopFlag = false;
+                            if (!sender.isChatAuthorized)
+                                stopFlag = true;
+                            else if(!sender.token.equals(node.get("token").asText()))
+                                stopFlag = true;
+                            if (stopFlag)
+                            {
+                                send.println("{\"code\": 400}");
+                                break;
+                            }
+                            PlayerList players = Main.playerList;
+                            for (Player sendPlayer : players.getPlayers())
+                            {
+                                try
+                                {
+                                    if (!sendPlayer.isChatAuthorized)
+                                        continue;
+                                    PrintWriter cSend = new PrintWriter(sendPlayer.chatSocket.getOutputStream(), true);
+                                    String encryptedMessage = node.get("message").asText();
+                                    String decryptedMessage = EncryptManager.decrypt(encryptedMessage, this.player.encryptKey);
+                                    logger.info("Received message by " + sender.name + "(" + sender.ip + "): " + decryptedMessage + "\n");
+                                    String newEncryptedMessage = EncryptManager.encrypt(decryptedMessage, sendPlayer.decryptKey);
+                                    MessageSender msgSender = new MessageSender();
+                                    msgSender.name = sender.name;
+                                    msgSender.content = newEncryptedMessage;
+                                    Calendar calendar = Calendar.getInstance();
+                                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                    msgSender.date = format.format(calendar);
+                                    cSend.println(mapper.writeValueAsString(msgSender));
+                                }
+                                catch (Exception e)
+                                {
+                                    send.println(ResponseBuilder.getResponse(405));
+                                }
+                            }
+                            break;
                     }
                     continue;
                 }
@@ -92,14 +139,14 @@ public class ChatThread extends  Thread
         }
         catch (Exception e)
         {
-            //Main.logger.info("[CHAT] Client Disconnected: " + player.name + "(" + player.ip.replace("/", "") + ")\n");
+            //logger.info("[CHAT] Client Disconnected: " + player.name + "(" + player.ip.replace("/", "") + ")\n");
             e.printStackTrace();
         }
         finally
         {
             if (player == null || player.name == null)
             {
-                Main.logger.info("[CHAT] Client Disconnected: Unknown(" + socket.getRemoteSocketAddress().toString() + ")\n");
+                logger.info("[CHAT] Client Disconnected: Unknown(" + socket.getRemoteSocketAddress().toString() + ")\n");
                 if (player != null)
                 {
                     try
@@ -108,7 +155,7 @@ public class ChatThread extends  Thread
                     }
                     catch (JsonProcessingException e)
                     {
-                        Main.logger.error("[CHAT] Error:");
+                        logger.error("[CHAT] Error:");
                         e.printStackTrace();
                     }
                 }
@@ -122,14 +169,14 @@ public class ChatThread extends  Thread
                 }
                 return;
             }
-            Main.logger.info("[CHAT] Client Disconnected: " + player.name + "(" + player.ip.replace("/", "") + ")\n");
+            logger.info("[CHAT] Client Disconnected: " + player.name + "(" + player.ip.replace("/", "") + ")\n");
             try
             {
                 Main.playerList.leave(player);
             }
             catch (JsonProcessingException e)
             {
-                Main.logger.error("[CHAT] Error:");
+                logger.error("[CHAT] Error:");
                 e.printStackTrace();
             }
             try

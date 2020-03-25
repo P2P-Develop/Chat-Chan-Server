@@ -1,4 +1,4 @@
-package develop.p2p.chatchan;
+package develop.p2p.chatchan.util;
 
 import java.io.IOException;
 import java.io.InputStream;

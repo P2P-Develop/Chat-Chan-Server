@@ -13,5 +13,5 @@ public class Player
     public String encryptKey = "";
     public String decryptKey = "";
     public boolean isChatAuthorized = false;
-
+    public boolean isConsole = false;
 }
