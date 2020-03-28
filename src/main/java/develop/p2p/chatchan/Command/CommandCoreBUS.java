@@ -24,21 +24,21 @@ public class CommandCoreBUS
 
     public int getSize()
     {
-        return this.length;
+        return length;
     }
 
     public EnumCommandOutput run(Player sender, String commandName, ArrayList<String> args, Logger logger) throws Exception
     {
         EnumCommandOutput output = null;
-        for (InterfaceCommand command: this.list)
+        for (InterfaceCommand command: list)
         {
             if (command.getName().equals(commandName))
                 output = command.execute(sender, commandName, args, logger);
         }
 
-        if (output == null && this.defaultCommand != null)
+        if (output == null && defaultCommand != null)
             output = defaultCommand.execute(sender, commandName, args, logger);
-        else
+        else if (output == null)
             output = EnumCommandOutput.NOTFOUND;
         return output;
     }

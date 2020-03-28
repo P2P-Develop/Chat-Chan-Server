@@ -1,4 +1,4 @@
-package develop.p2p.chatchan.Command.Comands;
+package develop.p2p.chatchan.Command.Commands;
 
 import develop.p2p.chatchan.Command.EnumCommandOutput;
 import develop.p2p.chatchan.Command.InterfaceCommand;

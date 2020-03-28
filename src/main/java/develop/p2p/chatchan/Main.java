@@ -1,9 +1,9 @@
 package develop.p2p.chatchan;
 
-import develop.p2p.chatchan.Command.Comands.CommandHelp;
-import develop.p2p.chatchan.Command.Comands.CommandKick;
-import develop.p2p.chatchan.Command.Comands.CommandPlayerList;
-import develop.p2p.chatchan.Command.Comands.CommandStop;
+import develop.p2p.chatchan.Command.Commands.CommandHelp;
+import develop.p2p.chatchan.Command.Commands.CommandKick;
+import develop.p2p.chatchan.Command.Commands.CommandPlayerList;
+import develop.p2p.chatchan.Command.Commands.CommandStop;
 import develop.p2p.chatchan.Command.CommandCoreBUS;
 import develop.p2p.chatchan.Command.EnumCommandOutput;
 import develop.p2p.chatchan.Init.Config;
@@ -61,6 +61,9 @@ public class Main
             core_BUS.listen(new CommandHelp());
             core_BUS.listen(new CommandPlayerList());
             core_BUS.listen(new CommandKick());
+            core_BUS.setDefault(new CommandHelp()
+            );
+            System.out.println("OK");
             logger.info("[SYSTEM] Definition call server...");
             callServerThread = new Thread()
             {
@@ -93,11 +96,9 @@ public class Main
             while (true)
             {
                 String[] cmdArgs = scanner.nextLine().split(" ");
-                String name = cmdArgs[0];
                 ArrayList<String> args = new ArrayList<>(Arrays.asList(cmdArgs));
                 args.remove(0);
-                Player player = ConsolePlayer.getPlayer();
-                EnumCommandOutput output = core_BUS.run(player, name, args, logger);
+                EnumCommandOutput output = core_BUS.run(ConsolePlayer.getPlayer(), cmdArgs[0], args, logger);
                 switch (output)
                 {
                     case FAILED:

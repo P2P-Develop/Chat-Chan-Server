@@ -1,4 +1,4 @@
-package develop.p2p.chatchan.Command.Comands;
+package develop.p2p.chatchan.Command.Commands;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import develop.p2p.chatchan.Command.EnumCommandOutput;

@@ -1,5 +1,6 @@
 package develop.p2p.chatchan.Init;
 
+import develop.p2p.chatchan.Main;
 import develop.p2p.chatchan.util.ErrorStop;
 import develop.p2p.chatchan.util.ListTextUtil;
 
@@ -18,4 +19,16 @@ public class BlackList
         }
         return util.getList();
     }
+
+    public static boolean isBlackListed(String ip)
+    {
+        ArrayList<String> list = Main.blackLst;
+        for (String ips: list)
+        {
+            if (ips.equals(ip))
+                return true;
+        }
+        return false;
+    }
+
 }
