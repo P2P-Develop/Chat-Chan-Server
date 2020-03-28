@@ -26,9 +26,8 @@ public class Config
             configInterface.setProperty("keyLength", "24");
         }
         if (!configInterface.saveDefaultConfig())
-        {
             ErrorStop.stop("Failed to Loading Config files.");
-        }
+
         Main.callPort = Integer.parseInt(configInterface.getString("callPort", "41410"));
         Main.commandPort = Integer.parseInt(configInterface.getString("commandPort", "45673"));
         Main.chatPort = Integer.parseInt(configInterface.getString("chatPort", "37564"));

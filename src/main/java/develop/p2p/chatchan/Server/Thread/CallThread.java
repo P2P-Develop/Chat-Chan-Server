@@ -3,6 +3,7 @@ package develop.p2p.chatchan.Server.Thread;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import develop.p2p.chatchan.Init.BlackList;
 import develop.p2p.chatchan.Main;
 import develop.p2p.chatchan.Message.EncryptManager;
 import develop.p2p.chatchan.Player.Player;
@@ -50,58 +51,57 @@ public class CallThread extends  Thread
                     line = "{" + line;
                     line = line.replace("\n", "").replace("\r", "");
                     Main.logger.info("[CALL] Text from client: " + line + "\n");
-                    try
+                    JsonNode root = mapper.readTree(line);
+                    switch (root.get("exec").asText())
                     {
-                        JsonNode root = mapper.readTree(line);
-                        switch (root.get("exec").asText())
-                        {
-                            case "join":
-                                if (root.get("name").isNull())
-                                {
-                                    String response = Main.playerList.join(player, "");
-                                    send.println(response);
-                                    socket.close();
-                                    break;
-                                }
-                                player.name = root.get("name").asText();
-                                String encryptKey;
-                                String decryptKey;
-                                Main.logger.info("[ECGM] Generating Encrypt key...");
-                                encryptKey = EncryptManager.generateEncryptKey();
-                                System.out.println("OK");
-                                Main.logger.info("[ECGM] Generating Decrypt key...");
-                                decryptKey = EncryptManager.generateDecryptKey();
-                                System.out.println("OK");
-                                player.encryptKey = encryptKey;
-                                player.decryptKey = decryptKey;
-                                String message = Main.playerList.join(player);
-                                ObjectMapper mappers = new ObjectMapper();
-                                JsonNode node = mappers.readTree(message);
-                                int code = node.get("code").asInt();
-                                if (code == 200)
-                                    send.println(message);
-                                else
-                                {
-                                    socket.close();
-                                    break;
-                                }
+                        case "join":
+                            if (BlackList.isBlackListed(socket.getRemoteSocketAddress().toString()))
+                            {
+                                send.println("{\"code\": 400}");
+                                socket.close();
+                                return;
+                            }
+                            if (root.get("name").isNull())
+                            {
+                                String response = Main.playerList.join(player, "");
+                                send.println(response);
+                                socket.close();
                                 break;
-                            case "leave":
-                                if (player != null)
-                                {
-                                    String response =  Main.playerList.leave(player);
-                                    send.println(response);
-                                    socket.close();
-                                    break;
-                                }
+                            }
+                            player.name = root.get("name").asText();
+                            String encryptKey;
+                            String decryptKey;
+                            Main.logger.info("[ECGM] Generating Encrypt key...");
+                            encryptKey = EncryptManager.generateEncryptKey();
+                            System.out.println("OK");
+                            Main.logger.info("[ECGM] Generating Decrypt key...");
+                            decryptKey = EncryptManager.generateDecryptKey();
+                            System.out.println("OK");
+                            player.encryptKey = encryptKey;
+                            player.decryptKey = decryptKey;
+                            String message = Main.playerList.join(player);
+                            ObjectMapper mappers = new ObjectMapper();
+                            JsonNode node = mappers.readTree(message);
+                            int code = node.get("code").asInt();
+                            if (code == 200)
+                                send.println(message);
+                            else
+                            {
+                                socket.close();
                                 break;
-                            default:
-                                send.println("{\"code\": 404}");
-                        }
-                    }
-                    catch (IOException e)
-                    {
-                        send.println("{\"code\": 404}");
+                            }
+                            break;
+                        case "leave":
+                            if (player != null)
+                            {
+                                String response =  Main.playerList.leave(player);
+                                send.println(response);
+                                socket.close();
+                                break;
+                            }
+                            break;
+                        default:
+                            send.println("{\"code\": 404}");
                     }
 
                 }
