@@ -12,6 +12,7 @@ import develop.p2p.chatchan.Player.Player;
 import develop.p2p.chatchan.Player.PlayerList;
 import develop.p2p.chatchan.Server.CallServer;
 import develop.p2p.chatchan.Server.ChatServer;
+import develop.p2p.chatchan.Server.CommandServer;
 import develop.p2p.chatchan.util.ConsolePlayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ public class Main
     public static PlayerList playerList;
     public static Thread callServerThread;
     public static Thread chatServerThread;
+    public static Thread commandServerThread;
     public static void main(String[] arg)
     {
         try
@@ -41,6 +43,7 @@ public class Main
             playerList = new PlayerList();
             final CallServer callServer = new CallServer();
             final ChatServer chatServer = new ChatServer();
+            final CommandServer commandServer = new CommandServer();
             blackLst = new ArrayList<>();
             config = new Config();
             logger = LoggerFactory.getLogger("Main");
@@ -70,7 +73,7 @@ public class Main
                 @Override
                 public void run()
                 {
-                    callServer.call(callPort);
+                    callServer.start(callPort);
                 }
             };
             System.out.println("OK");
@@ -80,7 +83,17 @@ public class Main
                 @Override
                 public void run()
                 {
-                    chatServer.chat(chatPort);
+                    chatServer.start(chatPort);
+                }
+            };
+            System.out.println("OK");
+            logger.info("[SYSTEM] Definition command server...");
+            commandServerThread = new Thread()
+            {
+                @Override
+                public void run()
+                {
+                    commandServer.start(commandPort);
                 }
             };
             System.out.println("OK");
@@ -89,6 +102,9 @@ public class Main
             System.out.println("OK");
             logger.info("[SYSTEM] Starting chat server...");
             chatServerThread.start();
+            System.out.println("OK");
+            logger.info("[SYSTEM] Starting command server...");
+            commandServerThread.start();
             System.out.println("OK");
             logger.info("[SYSTEM] See \"help\" command for showing help.\n");
             logger.info("[SYSTEM] Ready\n");

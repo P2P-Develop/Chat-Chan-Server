@@ -1,13 +1,13 @@
 package develop.p2p.chatchan.Command.Commands;
 
 import develop.p2p.chatchan.Command.EnumCommandOutput;
-import develop.p2p.chatchan.Command.InterfaceCommand;
+import develop.p2p.chatchan.Interface.CommandBase;
 import develop.p2p.chatchan.Player.Player;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
 
-public class CommandHelp implements InterfaceCommand
+public class CommandHelp implements CommandBase
 {
     @Override
     public String getName()

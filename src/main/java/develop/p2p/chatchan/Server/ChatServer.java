@@ -1,16 +1,17 @@
 package develop.p2p.chatchan.Server;
 
+import develop.p2p.chatchan.Interface.ServerThreadBase;
 import develop.p2p.chatchan.Main;
 import develop.p2p.chatchan.Server.Thread.ChatThread;
 
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
-import java.net.Socket;
 
-public class ChatServer
+public class ChatServer implements ServerThreadBase
 {
-    public void chat(int port)
+    @Override
+    public void start(int port)
     {
         try (ServerSocket listener = new ServerSocket())
         {

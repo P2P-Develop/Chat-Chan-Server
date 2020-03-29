@@ -1,5 +1,6 @@
 package develop.p2p.chatchan.Command;
 
+import develop.p2p.chatchan.Interface.CommandBase;
 import develop.p2p.chatchan.Player.Player;
 import org.slf4j.Logger;
 
@@ -8,15 +9,15 @@ import java.util.ArrayList;
 public class CommandCoreBUS
 {
     private int length = 0;
-    private ArrayList<InterfaceCommand> list = new ArrayList<>();
-    private InterfaceCommand defaultCommand;
-    public <T extends InterfaceCommand> void listen(T cmdCls)
+    private ArrayList<CommandBase> list = new ArrayList<>();
+    private CommandBase defaultCommand;
+    public <T extends CommandBase> void listen(T cmdCls)
     {
         list.add(cmdCls);
         length += 1;
     }
 
-    public <T extends InterfaceCommand> void remove (T cmdCls)
+    public <T extends CommandBase> void remove (T cmdCls)
     {
         list.remove(cmdCls);
         length -= 1;
@@ -30,7 +31,7 @@ public class CommandCoreBUS
     public EnumCommandOutput run(Player sender, String commandName, ArrayList<String> args, Logger logger) throws Exception
     {
         EnumCommandOutput output = null;
-        for (InterfaceCommand command: list)
+        for (CommandBase command: list)
         {
             if (command.getName().equals(commandName))
                 output = command.execute(sender, commandName, args, logger);
@@ -43,7 +44,7 @@ public class CommandCoreBUS
         return output;
     }
 
-    public <T extends InterfaceCommand> void setDefault(T cmdCls)
+    public <T extends CommandBase> void setDefault(T cmdCls)
     {
         defaultCommand = cmdCls;
     }
