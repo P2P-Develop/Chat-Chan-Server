@@ -2,13 +2,13 @@ package develop.p2p.chatchan.Server;
 
 import develop.p2p.chatchan.Interface.ServerThreadBase;
 import develop.p2p.chatchan.Main;
-import develop.p2p.chatchan.Server.Thread.CallThread;
+import develop.p2p.chatchan.Server.Thread.ChatThread;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 
-public class CallServer implements ServerThreadBase
+public class CommandServer implements ServerThreadBase
 {
     @Override
     public void start(int port)
@@ -19,15 +19,14 @@ public class CallServer implements ServerThreadBase
             listener.bind(new InetSocketAddress(port));
             while (true)
             {
-                CallThread thread  = new CallThread(listener.accept());
+                ChatThread thread  = new ChatThread(listener.accept());
                 thread.start();
             }
         }
         catch (IOException e)
         {
-            Main.logger.error("[CALL] Error: ");
+            Main.logger.error("[CMD] Error: ");
             e.printStackTrace();
         }
     }
-
 }

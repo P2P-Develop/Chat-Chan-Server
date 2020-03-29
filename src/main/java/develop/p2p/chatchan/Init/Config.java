@@ -1,47 +1,46 @@
 package develop.p2p.chatchan.Init;
 
-import develop.p2p.chatchan.Interface.ConfigInterface;
+import develop.p2p.chatchan.util.ConfigUtil;
 import develop.p2p.chatchan.Main;
 import develop.p2p.chatchan.util.ErrorStop;
-import org.omg.CORBA.CODESET_INCOMPATIBLE;
 
 import java.io.IOException;
 
 public class Config
 {
-    ConfigInterface configInterface;
+    ConfigUtil configUtil;
     public Config()
     {
-        configInterface = new ConfigInterface("config.xml");
+        configUtil = new ConfigUtil("config.xml");
     }
     public void parseConfig() throws IOException
     {
-        if (!this.configInterface.isExists())
-            this.configInterface.saveDefaultConfig();
-        if (!configInterface.isExists())
+        if (!this.configUtil.isExists())
+            this.configUtil.saveDefaultConfig();
+        if (!configUtil.isExists())
         {
-            configInterface.setProperty("callPort", "41410");
-            configInterface.setProperty("commandPort", "46573");
-            configInterface.setProperty("chatPort", "37564");
-            configInterface.setProperty("keyLength", "24");
+            configUtil.setProperty("callPort", "41410");
+            configUtil.setProperty("commandPort", "46573");
+            configUtil.setProperty("chatPort", "37564");
+            configUtil.setProperty("keyLength", "24");
         }
-        if (!configInterface.saveDefaultConfig())
+        if (!configUtil.saveDefaultConfig())
             ErrorStop.stop("Failed to Loading Config files.");
 
-        Main.callPort = Integer.parseInt(configInterface.getString("callPort", "41410"));
-        Main.commandPort = Integer.parseInt(configInterface.getString("commandPort", "45673"));
-        Main.chatPort = Integer.parseInt(configInterface.getString("chatPort", "37564"));
-        Main.keyLength = Integer.parseInt(configInterface.getString("keyLength", "256"));
+        Main.callPort = Integer.parseInt(configUtil.getString("callPort", "41410"));
+        Main.commandPort = Integer.parseInt(configUtil.getString("commandPort", "45673"));
+        Main.chatPort = Integer.parseInt(configUtil.getString("chatPort", "37564"));
+        Main.keyLength = Integer.parseInt(configUtil.getString("keyLength", "256"));
     }
 
     public void loadConfig()
     {
-        configInterface = new ConfigInterface("config.xml");
+        configUtil = new ConfigUtil("config.xml");
     }
 
     public boolean saveDefaultConfig() throws IOException
     {
-        return this.configInterface.saveDefaultConfig();
+        return this.configUtil.saveDefaultConfig();
     }
 
 }

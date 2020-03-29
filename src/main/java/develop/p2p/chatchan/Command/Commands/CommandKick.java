@@ -2,7 +2,7 @@ package develop.p2p.chatchan.Command.Commands;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import develop.p2p.chatchan.Command.EnumCommandOutput;
-import develop.p2p.chatchan.Command.InterfaceCommand;
+import develop.p2p.chatchan.Interface.CommandBase;
 import develop.p2p.chatchan.Main;
 import develop.p2p.chatchan.Player.Player;
 import develop.p2p.chatchan.Response.Kicked;
@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class CommandKick implements InterfaceCommand
+public class CommandKick implements CommandBase
 {
     @Override
     public String getName()

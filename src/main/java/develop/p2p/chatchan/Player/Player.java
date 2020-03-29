@@ -8,10 +8,12 @@ public class Player
     public String ip;
     public Socket callSocket;
     public Socket chatSocket;
+    public Socket CommandSocket;
     public Socket commandSocket;
     public String token = "";
     public String encryptKey = "";
     public String decryptKey = "";
     public boolean isChatAuthorized = false;
+    public boolean isCommandAuthorized = false;
     public boolean isConsole = false;
 }

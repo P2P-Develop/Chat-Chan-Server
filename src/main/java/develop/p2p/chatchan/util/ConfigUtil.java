@@ -1,14 +1,14 @@
-package develop.p2p.chatchan.Interface;
+package develop.p2p.chatchan.util;
 
 import java.io.*;
 import java.util.Properties;
 
-public class ConfigInterface
+public class ConfigUtil
 {
     File file;
     Properties settings = new Properties();
 
-    public ConfigInterface(String fileName)
+    public ConfigUtil(String fileName)
     {
         this.file = new File(fileName);
     }

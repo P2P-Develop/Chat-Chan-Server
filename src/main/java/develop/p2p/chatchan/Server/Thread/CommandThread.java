@@ -3,26 +3,29 @@ package develop.p2p.chatchan.Server.Thread;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import develop.p2p.chatchan.util.JsonObj;
 import develop.p2p.chatchan.Main;
 import develop.p2p.chatchan.Message.EncryptManager;
 import develop.p2p.chatchan.Message.MessageSender;
 import develop.p2p.chatchan.Message.Response.ResponseBuilder;
 import develop.p2p.chatchan.Player.Player;
 import develop.p2p.chatchan.Player.PlayerList;
+import develop.p2p.chatchan.util.JsonObj;
 import org.slf4j.Logger;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class ChatThread extends Thread
+public class CommandThread extends Thread
 {
     private Player player;
     private Socket socket;
     private Logger logger;
-    public ChatThread(Socket socket)
+    public CommandThread(Socket socket)
     {
         this.socket = socket;
         this.logger = Main.logger;
@@ -73,8 +76,8 @@ public class ChatThread extends Thread
                                 {
                                     send.println(response);
                                     this.player = player;
-                                    this.player.chatSocket = socket;
-                                    this.player.isChatAuthorized = true;
+                                    this.player.commandSocket = socket;
+                                    this.player.isCommandAuthorized = true;
                                     Main.playerList.put(name, this.player);
                                 }
                                 else
@@ -92,10 +95,10 @@ public class ChatThread extends Thread
                             send.println("{\"code\": 200}");
                             socket.close();
                             break;
-                        case "send":
+                        case "execute":
                             Player sender = Main.playerList.getPlayerFromName(node.get("name").asText());
                             boolean stopFlag = false;
-                            if (!sender.isChatAuthorized)
+                            if (!sender.isCommandAuthorized)
                                 stopFlag = true;
                             else if(!sender.token.equals(node.get("token").asText()))
                                 stopFlag = true;
@@ -112,9 +115,9 @@ public class ChatThread extends Thread
                                     if (!sendPlayer.isChatAuthorized)
                                         continue;
                                     PrintWriter cSend = new PrintWriter(sendPlayer.chatSocket.getOutputStream(), true);
-                                    String encryptedMessage = node.get("message").asText();
+                                    String encryptedMessage = node.get("command").asText();
                                     String decryptedMessage = EncryptManager.decrypt(encryptedMessage, this.player.encryptKey);
-                                    logger.info("Received message by " + sender.name + "(" + sender.ip + "): " + decryptedMessage + "\n");
+                                    logger.info("Received command by " + sender.name + "(" + sender.ip + "): " + decryptedMessage + "\n");
                                     String newEncryptedMessage = EncryptManager.encrypt(decryptedMessage, sendPlayer.decryptKey);
                                     MessageSender msgSender = new MessageSender();
                                     msgSender.name = sender.name;
