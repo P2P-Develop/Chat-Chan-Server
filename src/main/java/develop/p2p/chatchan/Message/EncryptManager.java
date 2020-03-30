@@ -17,19 +17,22 @@ public class EncryptManager
 {
     public static String encrypt(String text, String key) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException
     {
-        SecretKeySpec spec = new SecretKeySpec(key.getBytes(), "Rijndael");
-        Cipher cipher = Cipher.getInstance("Rijndael");
-        cipher.init(Cipher.ENCRYPT_MODE, spec);
-        byte[] ecb = cipher.doFinal(text.getBytes());
+        byte[] ecb = getCipher(Cipher.ENCRYPT_MODE, key).doFinal(text.getBytes());
         return new String(ecb);
     }
     public static String decrypt(String text, String key) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException
     {
+
+        byte[] dcb = getCipher(Cipher.DECRYPT_MODE, key).doFinal(text.getBytes());
+        return new String(dcb);
+    }
+
+    private static Cipher getCipher(int mode, String key) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException
+    {
         SecretKeySpec spec = new SecretKeySpec(key.getBytes(), "Rijndael");
         Cipher cipher = Cipher.getInstance("Rijndael");
-        cipher.init(Cipher.DECRYPT_MODE, spec);
-        byte[] ecb = cipher.doFinal(text.getBytes());
-        return new String(ecb);
+        cipher.init(mode, spec);
+        return cipher;
     }
 
     public static String generateEncryptKey()
@@ -37,13 +40,7 @@ public class EncryptManager
         StringBuilder encryptKey = new StringBuilder();
         for (int ii = 0; ii < Main.keyLength; ii++)
         {
-            Random random = new Random();
-            long seed = 314L;
-            do
-            {
-                seed = seed + ((seed ^ 0x5DEECE66DL + 0xBL) & (0xFFFFFFFFFFFFL)) * new Random().nextLong();
-            }
-            while((new Random(random.nextInt(24)).nextInt(1024) > 999));
+            long seed = getSeed(810L);
             Calendar cTime = Calendar.getInstance();
             seed = seed +
                     (cTime.get(Calendar.SECOND) * cTime.get(Calendar.HOUR) * 0x7c8a3b4L) +
@@ -62,14 +59,10 @@ public class EncryptManager
         StringBuilder decryptKey = new StringBuilder();
         for (int ii = 0; ii < Main.keyLength; ii++)
         {
-            Random random = new Random();
-            long seed = 314L;
-            do
-            {
-                seed = seed + ((seed ^ 0x5DEECE66DL + 0xBL) & (0xFFFFFFFFFFFFL)) * new Random().nextLong();
-            }
-            while((new Random(random.nextInt(24)).nextInt(1024) > 999));
+
+
             Calendar cTime = Calendar.getInstance();
+            long seed = getSeed(114L);
             seed = seed +
                     (cTime.get(Calendar.HOUR) * cTime.get(Calendar.MINUTE) * 0x4c1906) +
                     (cTime.get(Calendar.MILLISECOND) * 0x5ac0db) +
@@ -80,6 +73,17 @@ public class EncryptManager
             decryptKey.append(IntToString.getStringFromInt(cs));
         }
         return decryptKey.toString();
+    }
+
+    private static long getSeed(long seedBase)
+    {
+        Random random = new Random();
+        do
+        {
+            seedBase = seedBase + ((seedBase ^ 0x5DEECE66DL + 0xBL) & (0xFFFFFFFFFFFFL)) * new Random().nextLong();
+        }
+        while((new Random(random.nextInt(24)).nextInt(1024) > 999));
+        return seedBase;
     }
 
 }
