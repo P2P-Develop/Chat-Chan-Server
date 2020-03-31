@@ -1,4 +1,4 @@
-package develop.p2p.chatchan.Command;
+package develop.p2p.chatchan.Enum;
 
 
 public enum EnumCommandOutput

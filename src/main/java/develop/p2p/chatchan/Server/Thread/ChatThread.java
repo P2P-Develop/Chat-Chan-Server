@@ -3,6 +3,11 @@ package develop.p2p.chatchan.Server.Thread;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import develop.p2p.chatchan.ClientExecution.Execution.Join;
+import develop.p2p.chatchan.ClientExecution.Execution.Leave;
+import develop.p2p.chatchan.ClientExecution.Execution.Send;
+import develop.p2p.chatchan.ClientExecution.ExecutionCoreBUS;
+import develop.p2p.chatchan.Enum.EnumServerType;
 import develop.p2p.chatchan.util.JsonObj;
 import develop.p2p.chatchan.Main;
 import develop.p2p.chatchan.Message.EncryptManager;
@@ -28,6 +33,21 @@ public class ChatThread extends Thread
         this.logger = Main.logger;
     }
 
+    public void setPlayer(Player player)
+    {
+        this.player = player;
+    }
+
+    public void setSocket(Socket socket)
+    {
+        this.socket = socket;
+    }
+
+    public Player getPlayer()
+    {
+        return player;
+    }
+
     @Override
     public void run()
     {
@@ -38,6 +58,12 @@ public class ChatThread extends Thread
             BufferedReader read = new BufferedReader(new InputStreamReader(stream));
             PrintWriter send = new PrintWriter(socket.getOutputStream(), true);
             ObjectMapper mapper = new ObjectMapper();
+            ExecutionCoreBUS coreBUS = new ExecutionCoreBUS();
+            coreBUS.listen(new Join());
+            coreBUS.listen(new Leave());
+            coreBUS.listen(new Send());
+            EnumServerType type = EnumServerType.CHAT;
+            type.setEnumServerType(this);
             while(true)
             {
                 if (socket.isClosed())
@@ -52,85 +78,8 @@ public class ChatThread extends Thread
                 if (JsonObj.isJson(line))
                 {
                     JsonNode node = mapper.readTree(line);
-                    switch (node.get("exec").asText())
-                    {
-                        case "join":
-                            if (node.get("token").isNull() || node.get("name").isNull())
-                            {
-                                String response = Main.playerList.join(player, "");
-                                send.println(response);
-                                socket.close();
-                                break;
-                            }
-                            String token = node.get("token").asText();
-                            String name = node.get("name").asText();
-                            Player player = Main.playerList.getPlayerFromName(name);
-                            if (player != null)
-                            {
-                                String response = Main.playerList.join(player, token);
-                                JsonNode nodes = mapper.readTree(response);
-                                if (nodes.get("code").asInt() == 200)
-                                {
-                                    send.println(response);
-                                    this.player = player;
-                                    this.player.chatSocket = socket;
-                                    this.player.isChatAuthorized = true;
-                                    Main.playerList.put(name, this.player);
-                                }
-                                else
-                                {
-                                    send.println(response);
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                System.out.println("ｇｙ");
-                            }
-                            break;
-                        case "leave":
-                            send.println("{\"code\": 200}");
-                            socket.close();
-                            break;
-                        case "send":
-                            Player sender = Main.playerList.getPlayerFromName(node.get("name").asText());
-                            boolean stopFlag = false;
-                            if (!sender.isChatAuthorized)
-                                stopFlag = true;
-                            else if(!sender.token.equals(node.get("token").asText()))
-                                stopFlag = true;
-                            if (stopFlag)
-                            {
-                                send.println("{\"code\": 400}");
-                                break;
-                            }
-                            PlayerList players = Main.playerList;
-                            for (Player sendPlayer : players.getPlayers())
-                            {
-                                try
-                                {
-                                    if (!sendPlayer.isChatAuthorized)
-                                        continue;
-                                    PrintWriter cSend = new PrintWriter(sendPlayer.chatSocket.getOutputStream(), true);
-                                    String encryptedMessage = node.get("message").asText();
-                                    String decryptedMessage = EncryptManager.decrypt(encryptedMessage, this.player.encryptKey);
-                                    logger.info("Received message by " + sender.name + "(" + sender.ip + "): " + decryptedMessage + "\n");
-                                    String newEncryptedMessage = EncryptManager.encrypt(decryptedMessage, sendPlayer.decryptKey);
-                                    MessageSender msgSender = new MessageSender();
-                                    msgSender.name = sender.name;
-                                    msgSender.content = newEncryptedMessage;
-                                    Calendar calendar = Calendar.getInstance();
-                                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                    msgSender.date = format.format(calendar);
-                                    cSend.println(mapper.writeValueAsString(msgSender));
-                                }
-                                catch (Exception e)
-                                {
-                                    send.println(ResponseBuilder.getResponse(405));
-                                }
-                            }
-                            break;
-                    }
+
+                    coreBUS.execute(this.player, node.get("exec").asText(), node, Main.logger, socket, type);
                     continue;
                 }
                 send.println("{\"code\": 404}");

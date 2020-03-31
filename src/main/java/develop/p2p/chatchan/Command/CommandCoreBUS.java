@@ -1,5 +1,6 @@
 package develop.p2p.chatchan.Command;
 
+import develop.p2p.chatchan.Enum.EnumCommandOutput;
 import develop.p2p.chatchan.Interface.CommandBase;
 import develop.p2p.chatchan.Player.Player;
 import org.slf4j.Logger;
@@ -48,4 +49,9 @@ public class CommandCoreBUS
     {
         defaultCommand = cmdCls;
     }
+    public ArrayList<CommandBase> getCommandList()
+    {
+        return list;
+    }
+
 }

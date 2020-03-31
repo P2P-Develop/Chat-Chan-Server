@@ -1,6 +1,6 @@
 package develop.p2p.chatchan.Command.Commands;
 
-import develop.p2p.chatchan.Command.EnumCommandOutput;
+import develop.p2p.chatchan.Enum.EnumCommandOutput;
 import develop.p2p.chatchan.Interface.CommandBase;
 import develop.p2p.chatchan.Main;
 import develop.p2p.chatchan.Player.Player;
@@ -36,5 +36,17 @@ public class CommandStop implements CommandBase
         logger.info("[FATAL] Stopping system...\n");
         System.exit(0);
         return null;
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "stop";
+    }
+
+    @Override
+    public String getHelp()
+    {
+        return "Stopping all servers.";
     }
 }

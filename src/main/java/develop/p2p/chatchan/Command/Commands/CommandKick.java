@@ -1,7 +1,7 @@
 package develop.p2p.chatchan.Command.Commands;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import develop.p2p.chatchan.Command.EnumCommandOutput;
+import develop.p2p.chatchan.Enum.EnumCommandOutput;
 import develop.p2p.chatchan.Interface.CommandBase;
 import develop.p2p.chatchan.Main;
 import develop.p2p.chatchan.Player.Player;
@@ -68,5 +68,17 @@ public class CommandKick implements CommandBase
 
         logger.info(String.format("[SYSTEM] Player(%s) kicked from %s%s%s\n", args.get(1), chatFlag ? "ChatServer ": "", commandFlag ? "CommandServer ": "", callFlag ? "CallServer ": ""));
         return EnumCommandOutput.OK;
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "kick <PlayerName>";
+    }
+
+    @Override
+    public String getHelp()
+    {
+        return "kick player from all servers.";
     }
 }

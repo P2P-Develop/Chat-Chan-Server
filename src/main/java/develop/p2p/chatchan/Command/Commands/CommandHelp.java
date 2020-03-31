@@ -1,6 +1,6 @@
 package develop.p2p.chatchan.Command.Commands;
 
-import develop.p2p.chatchan.Command.EnumCommandOutput;
+import develop.p2p.chatchan.Enum.EnumCommandOutput;
 import develop.p2p.chatchan.Interface.CommandBase;
 import develop.p2p.chatchan.Player.Player;
 import org.slf4j.Logger;
@@ -22,6 +22,19 @@ public class CommandHelp implements CommandBase
         logger.info("[SYSTEM] # help -- showing help.\n");
         logger.info("[SYSTEM] # stop -- stopping all server.\n");
         logger.info("[SYSTEM] # kick <PlayerName> -- player kick from all server.\n");
+        logger.info("[SYSTEM] # list -- all list of player.\n");
         return EnumCommandOutput.OK;
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "help";
+    }
+
+    @Override
+    public String getHelp()
+    {
+        return "showing commands help.";
     }
 }
