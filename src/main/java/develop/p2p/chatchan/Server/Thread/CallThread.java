@@ -3,15 +3,22 @@ package develop.p2p.chatchan.Server.Thread;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.media.jfxmedia.events.NewFrameEvent;
+import develop.p2p.chatchan.ClientExecution.Execution.Join;
+import develop.p2p.chatchan.ClientExecution.Execution.Leave;
+import develop.p2p.chatchan.ClientExecution.ExecutionCoreBUS;
+import develop.p2p.chatchan.Enum.EnumServerType;
 import develop.p2p.chatchan.Init.BlackList;
+import develop.p2p.chatchan.Interface.ClientExecutionBase;
 import develop.p2p.chatchan.Main;
 import develop.p2p.chatchan.Message.EncryptManager;
 import develop.p2p.chatchan.Player.Player;
+import develop.p2p.chatchan.util.JsonObj;
 
 import java.io.*;
 import java.net.Socket;
 
-public class CallThread extends  Thread
+public class CallThread extends Thread
 {
     public Player player;
     public Socket socket;
@@ -36,6 +43,12 @@ public class CallThread extends  Thread
             BufferedReader read = new BufferedReader(new InputStreamReader(stream));
             PrintWriter send = new PrintWriter(socket.getOutputStream(), true);
             ObjectMapper mapper = new ObjectMapper();
+            ExecutionCoreBUS coreBUS = new ExecutionCoreBUS();
+            coreBUS.listen(new Leave());
+            coreBUS.listen(new Join());
+
+            EnumServerType type = EnumServerType.CALL;
+            type.setEnumServerType(this);
             while(true)
             {
                 if (socket.isClosed())
@@ -51,59 +64,11 @@ public class CallThread extends  Thread
                     line = "{" + line;
                     line = line.replace("\n", "").replace("\r", "");
                     Main.logger.info("[CALL] Text from client: " + line + "\n");
-                    JsonNode root = mapper.readTree(line);
-                    switch (root.get("exec").asText())
+                    if (JsonObj.isJson(line))
                     {
-                        case "join":
-                            if (BlackList.isBlackListed(socket.getRemoteSocketAddress().toString()))
-                            {
-                                send.println("{\"code\": 400}");
-                                socket.close();
-                                return;
-                            }
-                            if (root.get("name").isNull())
-                            {
-                                String response = Main.playerList.join(player, "");
-                                send.println(response);
-                                socket.close();
-                                break;
-                            }
-                            player.name = root.get("name").asText();
-                            String encryptKey;
-                            String decryptKey;
-                            Main.logger.info("[ECGM] Generating Encrypt key...");
-                            encryptKey = EncryptManager.generateEncryptKey();
-                            System.out.println("OK");
-                            Main.logger.info("[ECGM] Generating Decrypt key...");
-                            decryptKey = EncryptManager.generateDecryptKey();
-                            System.out.println("OK");
-                            player.encryptKey = encryptKey;
-                            player.decryptKey = decryptKey;
-                            String message = Main.playerList.join(player);
-                            ObjectMapper mappers = new ObjectMapper();
-                            JsonNode node = mappers.readTree(message);
-                            int code = node.get("code").asInt();
-                            if (code == 200)
-                                send.println(message);
-                            else
-                            {
-                                socket.close();
-                                break;
-                            }
-                            break;
-                        case "leave":
-                            if (player != null)
-                            {
-                                String response =  Main.playerList.leave(player);
-                                send.println(response);
-                                socket.close();
-                                break;
-                            }
-                            break;
-                        default:
-                            send.println("{\"code\": 404}");
+                        JsonNode node = mapper.readTree(line);
+                        coreBUS.execute(this.player, node.get("exec").asText(), node, Main.logger, socket, type);
                     }
-
                 }
                 catch (Exception ignored)
                 {
@@ -126,21 +91,14 @@ public class CallThread extends  Thread
                     try
                     {
                         Main.playerList.leave(player);
+
                     }
-                    catch (JsonProcessingException e)
+                    catch (Exception e)
                     {
 
                         Main.logger.error("[CALL] Error:");
                         e.printStackTrace();
                     }
-                }
-                try
-                {
-                    if (socket != null)
-                        socket.close();
-                }
-                catch (Exception ignored)
-                {
                 }
                 return;
             }
@@ -148,20 +106,14 @@ public class CallThread extends  Thread
             try
             {
                 Main.playerList.leave(player);
+                if (socket != null)
+                    socket.close();
             }
-            catch (JsonProcessingException e)
+            catch (Exception e)
             {
 
                 Main.logger.error("[CALL] Error:");
                 e.printStackTrace();
-            }
-            try
-            {
-                if (socket != null)
-                    socket.close();
-            }
-            catch (Exception ignored)
-            {
             }
         }
     }

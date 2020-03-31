@@ -2,8 +2,9 @@ package develop.p2p.chatchan.util;
 
 import develop.p2p.chatchan.Player.Player;
 
-public class ConsolePlayer
+public class ConsolePlayer extends Player
 {
+
     public static Player getPlayer()
     {
         Player player = new Player();

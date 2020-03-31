@@ -5,10 +5,9 @@ import develop.p2p.chatchan.Command.Commands.CommandKick;
 import develop.p2p.chatchan.Command.Commands.CommandPlayerList;
 import develop.p2p.chatchan.Command.Commands.CommandStop;
 import develop.p2p.chatchan.Command.CommandCoreBUS;
-import develop.p2p.chatchan.Command.EnumCommandOutput;
+import develop.p2p.chatchan.Enum.EnumCommandOutput;
 import develop.p2p.chatchan.Init.Config;
 import develop.p2p.chatchan.Init.BlackList;
-import develop.p2p.chatchan.Player.Player;
 import develop.p2p.chatchan.Player.PlayerList;
 import develop.p2p.chatchan.Server.CallServer;
 import develop.p2p.chatchan.Server.ChatServer;
@@ -64,8 +63,7 @@ public class Main
             core_BUS.listen(new CommandHelp());
             core_BUS.listen(new CommandPlayerList());
             core_BUS.listen(new CommandKick());
-            core_BUS.setDefault(new CommandHelp()
-            );
+            core_BUS.setDefault(new CommandHelp());
             System.out.println("OK");
             logger.info("[SYSTEM] Definition call server...");
             callServerThread = new Thread()

@@ -1,6 +1,6 @@
 package develop.p2p.chatchan.Command.Commands;
 
-import develop.p2p.chatchan.Command.EnumCommandOutput;
+import develop.p2p.chatchan.Enum.EnumCommandOutput;
 import develop.p2p.chatchan.Interface.CommandBase;
 import develop.p2p.chatchan.Main;
 import develop.p2p.chatchan.Player.Player;
@@ -37,5 +37,17 @@ public class CommandPlayerList implements CommandBase
         logger.info(response.toString());
         logger.info("[SYSTEM] " + len + "/2\n");
         return EnumCommandOutput.OK;
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "list";
+    }
+
+    @Override
+    public String getHelp()
+    {
+        return "show all list of player.";
     }
 }
