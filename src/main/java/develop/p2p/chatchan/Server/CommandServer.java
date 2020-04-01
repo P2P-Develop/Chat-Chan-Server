@@ -5,8 +5,7 @@ import develop.p2p.chatchan.Main;
 import develop.p2p.chatchan.Server.Thread.ChatThread;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
+import java.net.*;
 
 public class CommandServer implements ServerThreadBase
 {

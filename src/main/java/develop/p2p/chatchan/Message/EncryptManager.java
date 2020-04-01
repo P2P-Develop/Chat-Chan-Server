@@ -3,15 +3,11 @@ package develop.p2p.chatchan.Message;
 import develop.p2p.chatchan.util.IntToString;
 import develop.p2p.chatchan.Main;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
+import java.security.*;
+import java.util.*;
+
 import javax.crypto.spec.SecretKeySpec;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Calendar;
-import java.util.Random;
+import javax.crypto.*;
 
 public class EncryptManager
 {
@@ -59,8 +55,6 @@ public class EncryptManager
         StringBuilder decryptKey = new StringBuilder();
         for (int ii = 0; ii < Main.keyLength; ii++)
         {
-
-
             Calendar cTime = Calendar.getInstance();
             long seed = getSeed(114L);
             seed = seed +
@@ -79,9 +73,7 @@ public class EncryptManager
     {
         Random random = new Random();
         do
-        {
             seedBase = seedBase + ((seedBase ^ 0x5DEECE66DL + 0xBL) & (0xFFFFFFFFFFFFL)) * new Random().nextLong();
-        }
         while((new Random(random.nextInt(24)).nextInt(1024) > 999));
         return seedBase;
     }

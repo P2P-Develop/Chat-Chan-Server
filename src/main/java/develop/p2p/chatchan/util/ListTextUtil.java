@@ -1,9 +1,7 @@
 package develop.p2p.chatchan.util;
 
-import javax.print.DocFlavor;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.concurrent.BrokenBarrierException;
 
 public class ListTextUtil
 {

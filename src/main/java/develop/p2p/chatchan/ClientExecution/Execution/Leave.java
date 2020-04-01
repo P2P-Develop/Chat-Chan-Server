@@ -4,9 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import develop.p2p.chatchan.Interface.ClientExecutionBase;
 import develop.p2p.chatchan.Main;
 import develop.p2p.chatchan.Player.Player;
-import develop.p2p.chatchan.Server.Thread.CallThread;
-import develop.p2p.chatchan.Server.Thread.ChatThread;
-import develop.p2p.chatchan.Server.Thread.CommandThread;
+import develop.p2p.chatchan.Server.Thread.*;
+
 import org.slf4j.Logger;
 
 import java.io.PrintWriter;

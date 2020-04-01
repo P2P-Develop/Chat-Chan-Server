@@ -25,6 +25,9 @@ public class CommandStop implements CommandBase
             logger.info("[CHAT] Stopping server...");
             Main.chatServerThread.stop();
             System.out.println("OK");
+            logger.info("[COMMAND] Stopping server...");
+            Main.commandServerThread.stop();
+            System.out.println("OK");
         }
         catch (Exception e)
         {
