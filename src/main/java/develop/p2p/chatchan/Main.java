@@ -1,20 +1,14 @@
 package develop.p2p.chatchan;
 
-import develop.p2p.chatchan.Command.Commands.CommandHelp;
-import develop.p2p.chatchan.Command.Commands.CommandKick;
-import develop.p2p.chatchan.Command.Commands.CommandPlayerList;
-import develop.p2p.chatchan.Command.Commands.CommandStop;
+import develop.p2p.chatchan.Command.Commands.*;
 import develop.p2p.chatchan.Command.CommandCoreBUS;
 import develop.p2p.chatchan.Enum.EnumCommandOutput;
-import develop.p2p.chatchan.Init.Config;
-import develop.p2p.chatchan.Init.BlackList;
+import develop.p2p.chatchan.Init.*;
 import develop.p2p.chatchan.Player.PlayerList;
-import develop.p2p.chatchan.Server.CallServer;
-import develop.p2p.chatchan.Server.ChatServer;
-import develop.p2p.chatchan.Server.CommandServer;
+import develop.p2p.chatchan.Server.*;
 import develop.p2p.chatchan.util.ConsolePlayer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import org.slf4j.*;
 
 import java.util.*;
 
@@ -31,6 +25,7 @@ public class Main
     public static Thread callServerThread;
     public static Thread chatServerThread;
     public static Thread commandServerThread;
+    public static CommandCoreBUS commandCoreBUS;
     public static void main(String[] arg)
     {
         try
@@ -38,33 +33,42 @@ public class Main
             System.out.println("Chat-Chan Personal Server");
             System.out.println("Create by P2PDevelop");
             System.out.println("This application are managed by MIT License.\n\n");
+
             System.out.print("[SYSTEM] Loading library...");
             playerList = new PlayerList();
+
             final CallServer callServer = new CallServer();
             final ChatServer chatServer = new ChatServer();
             final CommandServer commandServer = new CommandServer();
+
             blackLst = new ArrayList<>();
             config = new Config();
             logger = LoggerFactory.getLogger("Main");
+
             System.out.println("OK");
+
             logger.info("[SYSTEM] Loading ConfigFiles...");
             config.loadConfig();
             config.saveDefaultConfig();
             System.out.println("OK");
+
             logger.info("[SYSTEM] Parsing ConfigFiles...");
             config.parseConfig();
             System.out.println("OK");
+
             logger.info("[SYSTEM] Loading BlackListFiles...");
             blackLst = BlackList.getBlackList();
             System.out.println("OK");
+
             logger.info("[SYSTEM] Loading Command Lists...");
-            CommandCoreBUS core_BUS = new CommandCoreBUS();
-            core_BUS.listen(new CommandStop());
-            core_BUS.listen(new CommandHelp());
-            core_BUS.listen(new CommandPlayerList());
-            core_BUS.listen(new CommandKick());
-            core_BUS.setDefault(new CommandHelp());
+            commandCoreBUS = new CommandCoreBUS();
+            commandCoreBUS.listen(new CommandStop());
+            commandCoreBUS.listen(new CommandHelp());
+            commandCoreBUS.listen(new CommandPlayerList());
+            commandCoreBUS.listen(new CommandKick());
+            commandCoreBUS.setDefault(new CommandHelp());
             System.out.println("OK");
+
             logger.info("[SYSTEM] Definition call server...");
             callServerThread = new Thread()
             {
@@ -75,6 +79,7 @@ public class Main
                 }
             };
             System.out.println("OK");
+
             logger.info("[SYSTEM] Definition chat server...");
             chatServerThread = new Thread()
             {
@@ -85,6 +90,7 @@ public class Main
                 }
             };
             System.out.println("OK");
+
             logger.info("[SYSTEM] Definition command server...");
             commandServerThread = new Thread()
             {
@@ -95,24 +101,31 @@ public class Main
                 }
             };
             System.out.println("OK");
+
             logger.info("[SYSTEM] Starting call server...");
             callServerThread.start();
             System.out.println("OK");
+
             logger.info("[SYSTEM] Starting chat server...");
             chatServerThread.start();
             System.out.println("OK");
+
             logger.info("[SYSTEM] Starting command server...");
             commandServerThread.start();
             System.out.println("OK");
+
             logger.info("[SYSTEM] See \"help\" command for showing help.\n");
             logger.info("[SYSTEM] Ready\n");
+
             Scanner scanner = new Scanner(System.in);
+
             while (true)
             {
                 String[] cmdArgs = scanner.nextLine().split(" ");
                 ArrayList<String> args = new ArrayList<>(Arrays.asList(cmdArgs));
                 args.remove(0);
-                EnumCommandOutput output = core_BUS.run(ConsolePlayer.getPlayer(), cmdArgs[0], args, logger);
+                EnumCommandOutput output = commandCoreBUS.run(ConsolePlayer.getPlayer(), cmdArgs[0], args, logger);
+
                 switch (output)
                 {
                     case FAILED:

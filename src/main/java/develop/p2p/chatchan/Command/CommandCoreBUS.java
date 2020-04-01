@@ -39,7 +39,10 @@ public class CommandCoreBUS
         }
 
         if (output == null && defaultCommand != null)
+        {
+            logger.error("[SYNTAX] Command not found. show help.");
             output = defaultCommand.execute(sender, commandName, args, logger);
+        }
         else if (output == null)
             output = EnumCommandOutput.NOTFOUND;
         return output;

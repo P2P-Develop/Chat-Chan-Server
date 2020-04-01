@@ -3,13 +3,10 @@ package develop.p2p.chatchan.Player;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import develop.p2p.chatchan.Main;
-import develop.p2p.chatchan.Player.Join.JoinParser;
-import develop.p2p.chatchan.Player.Join.NotCallJoinParser;
+import develop.p2p.chatchan.Player.Join.*;
 import develop.p2p.chatchan.Player.Leave.LeaveParser;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.UUID;
+import java.util.*;
 
 public class PlayerList
 {

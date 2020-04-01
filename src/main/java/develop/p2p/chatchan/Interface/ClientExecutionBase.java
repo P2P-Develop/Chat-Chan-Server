@@ -2,9 +2,7 @@ package develop.p2p.chatchan.Interface;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import develop.p2p.chatchan.Player.Player;
-import develop.p2p.chatchan.Server.Thread.CallThread;
-import develop.p2p.chatchan.Server.Thread.ChatThread;
-import develop.p2p.chatchan.Server.Thread.CommandThread;
+import develop.p2p.chatchan.Server.Thread.*;
 import org.slf4j.Logger;
 
 import java.net.Socket;
