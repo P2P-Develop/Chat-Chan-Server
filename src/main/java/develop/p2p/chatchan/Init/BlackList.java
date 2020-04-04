@@ -8,9 +8,10 @@ import java.util.ArrayList;
 
 public class BlackList
 {
-    public static ArrayList<String> getBlackList() throws IOException
+    private ListTextUtil util;
+    public ArrayList<String> getBlackList() throws IOException
     {
-        ListTextUtil util = new ListTextUtil("blacklist.lst");
+        util = new ListTextUtil("blacklist.lst");
         if (!util.saveDefaultList())
         {
             System.out.println("FAILED");
@@ -19,15 +20,20 @@ public class BlackList
         return util.getList();
     }
 
-    public static boolean isBlackListed(String ip)
+    public boolean isBlackListed(String ip)
     {
-        ArrayList<String> list = Main.blackLst;
-        for (String ips: list)
+        for (String ips: util.getList())
         {
-            if (ips.equals(ip))
+            if (ip.contains(ips))
                 return true;
         }
         return false;
+    }
+
+    public boolean add (String ip) throws IOException
+    {
+        util.add(ip);
+        return util.save();
     }
 
 }

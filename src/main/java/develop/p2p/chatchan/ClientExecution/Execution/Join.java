@@ -24,7 +24,7 @@ public class Join implements ClientExecutionBase
     public void executeCall(Player sender, String commandName, JsonNode node, Logger logger, Socket sockets, CallThread thread) throws Exception
     {
         PrintWriter send = new PrintWriter(sockets.getOutputStream(), true);
-        if (BlackList.isBlackListed(sockets.getRemoteSocketAddress().toString()))
+        if (Main.blackList.isBlackListed(sockets.getRemoteSocketAddress().toString()))
         {
             send.println("{\"code\": 400}");
             sockets.close();

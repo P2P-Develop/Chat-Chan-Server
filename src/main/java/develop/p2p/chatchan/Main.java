@@ -26,6 +26,7 @@ public class Main
     public static Thread chatServerThread;
     public static Thread commandServerThread;
     public static CommandCoreBUS commandCoreBUS;
+    public static BlackList blackList;
     public static void main(String[] arg)
     {
         try
@@ -57,7 +58,8 @@ public class Main
             System.out.println("OK");
 
             logger.info("[SYSTEM] Loading BlackListFiles...");
-            blackLst = BlackList.getBlackList();
+            blackList = new BlackList();
+            blackLst = blackList.getBlackList();
             System.out.println("OK");
 
             logger.info("[SYSTEM] Loading Command Lists...");
@@ -66,6 +68,7 @@ public class Main
             commandCoreBUS.listen(new CommandHelp());
             commandCoreBUS.listen(new CommandPlayerList());
             commandCoreBUS.listen(new CommandKick());
+            commandCoreBUS.listen(new CommandBAN());
             commandCoreBUS.setDefault(new CommandHelp());
             System.out.println("OK");
 
