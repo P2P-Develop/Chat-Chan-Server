@@ -24,7 +24,7 @@ public class CommandServer implements ServerThreadBase
         }
         catch (IOException e)
         {
-            Main.logger.error("[CMD] Error: ");
+            Main.logger.error("[COMMAND] Error: ");
             e.printStackTrace();
         }
     }

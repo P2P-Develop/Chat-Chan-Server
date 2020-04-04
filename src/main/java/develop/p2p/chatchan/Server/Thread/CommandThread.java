@@ -67,7 +67,7 @@ public class CommandThread extends Thread
                     break;
                 String line = new String(data);
                 line += read.readLine();
-                logger.info("[CHAT] Text from client: " + line + "\n");
+                logger.info("[COMMAND] Text from client: " + line + "\n");
                 if (JsonObj.isJson(line))
                 {
                     JsonNode node = mapper.readTree(line);
@@ -87,19 +87,7 @@ public class CommandThread extends Thread
         {
             if (player == null || player.name == null)
             {
-                logger.info("[CHAT] Client Disconnected: Unknown(" + socket.getRemoteSocketAddress().toString() + ")\n");
-                if (player != null)
-                {
-                    try
-                    {
-                        Main.playerList.leave(player);
-                    }
-                    catch (JsonProcessingException e)
-                    {
-                        logger.error("[CHAT] Error:");
-                        e.printStackTrace();
-                    }
-                }
+                logger.info("[COMMAND] Client Disconnected: Unknown(" + socket.getRemoteSocketAddress().toString() + ")\n");
                 try
                 {
                     if (socket != null)
@@ -110,23 +98,17 @@ public class CommandThread extends Thread
                 }
                 return;
             }
-            logger.info("[CHAT] Client Disconnected: " + player.name + "(" + player.ip.replace("/", "") + ")\n");
+            logger.info("[COMMAND] Client Disconnected: " + player.name + "(" + player.ip.replace("/", "") + ")\n");
             try
             {
                 Main.playerList.leave(player);
-            }
-            catch (JsonProcessingException e)
-            {
-                logger.error("[CHAT] Error:");
-                e.printStackTrace();
-            }
-            try
-            {
                 if (socket != null)
                     socket.close();
             }
-            catch (Exception ignored)
+            catch (IOException e)
             {
+                logger.error("[COMMAND] Error:");
+                e.printStackTrace();
             }
         }
     }

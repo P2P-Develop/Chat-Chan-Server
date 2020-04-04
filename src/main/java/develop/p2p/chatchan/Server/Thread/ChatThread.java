@@ -10,10 +10,7 @@ import develop.p2p.chatchan.Player.Player;
 import develop.p2p.chatchan.util.JsonObj;
 import org.slf4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 public class ChatThread extends Thread
@@ -90,18 +87,6 @@ public class ChatThread extends Thread
             if (player == null || player.name == null)
             {
                 logger.info("[CHAT] Client Disconnected: Unknown(" + socket.getRemoteSocketAddress().toString() + ")\n");
-                if (player != null)
-                {
-                    try
-                    {
-                        Main.playerList.leave(player);
-                    }
-                    catch (JsonProcessingException e)
-                    {
-                        logger.error("[CHAT] Error:");
-                        e.printStackTrace();
-                    }
-                }
                 try
                 {
                     if (socket != null)
@@ -116,19 +101,13 @@ public class ChatThread extends Thread
             try
             {
                 Main.playerList.leave(player);
-            }
-            catch (JsonProcessingException e)
-            {
-                logger.error("[CHAT] Error:");
-                e.printStackTrace();
-            }
-            try
-            {
                 if (socket != null)
                     socket.close();
             }
-            catch (Exception ignored)
+            catch (IOException e)
             {
+                logger.error("[CHAT] Error:");
+                e.printStackTrace();
             }
         }
     }
