@@ -81,4 +81,10 @@ public class CommandKick implements CommandBase
     {
         return "kick player from all servers.";
     }
+
+    @Override
+    public ArrayList<String> getAlias()
+    {
+        return null;
+    }
 }

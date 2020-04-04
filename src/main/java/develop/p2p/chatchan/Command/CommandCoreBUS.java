@@ -31,16 +31,27 @@ public class CommandCoreBUS
 
     public EnumCommandOutput run(Player sender, String commandName, ArrayList<String> args, Logger logger) throws Exception
     {
+        if (commandName.equals(""))
+            return EnumCommandOutput.OK;
         EnumCommandOutput output = null;
         for (CommandBase command: list)
         {
+            ArrayList<String> aliases = command.getAlias();
             if (command.getName().equals(commandName))
                 output = command.execute(sender, commandName, args, logger);
+            else if (aliases != null && aliases.size() != 0)
+            {
+                for (String alias: aliases)
+                {
+                    if (alias.equals(commandName))
+                        output = command.execute(sender, commandName, args, logger);
+                }
+            }
         }
 
         if (output == null && defaultCommand != null)
         {
-            logger.error("[SYNTAX] Command not found. show help.");
+            logger.error("[SYNTAX] Command not found. show help.\n");
             output = defaultCommand.execute(sender, commandName, args, logger);
         }
         else if (output == null)
@@ -56,5 +67,6 @@ public class CommandCoreBUS
     {
         return list;
     }
+
 
 }

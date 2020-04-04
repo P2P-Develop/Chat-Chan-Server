@@ -10,6 +10,14 @@ import java.util.ArrayList;
 
 public class CommandPlayerList implements CommandBase
 {
+    ArrayList<String> alias = new ArrayList<>();
+    public CommandPlayerList()
+    {
+        this.alias.add("ls");
+        this.alias.add("list");
+        this.alias.add("lst");
+    }
+
     @Override
     public String getName()
     {
@@ -49,5 +57,11 @@ public class CommandPlayerList implements CommandBase
     public String getHelp()
     {
         return "show all list of player.";
+    }
+
+    @Override
+    public ArrayList<String> getAlias()
+    {
+        return this.alias;
     }
 }
