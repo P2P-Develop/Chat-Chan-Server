@@ -10,6 +10,11 @@ import java.util.ArrayList;
 
 public class CommandHelp implements CommandBase
 {
+    ArrayList<String> alias = new ArrayList<>();
+    public CommandHelp()
+    {
+        this.alias.add("?");
+    }
     @Override
     public String getName()
     {
@@ -35,5 +40,11 @@ public class CommandHelp implements CommandBase
     public String getHelp()
     {
         return "showing commands help.";
+    }
+
+    @Override
+    public ArrayList<String> getAlias()
+    {
+        return this.alias;
     }
 }

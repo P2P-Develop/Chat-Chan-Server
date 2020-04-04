@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 public class CommandStop implements CommandBase
 {
+
     public String getName()
     {
         return "stop";
@@ -51,5 +52,11 @@ public class CommandStop implements CommandBase
     public String getHelp()
     {
         return "Stopping all servers.";
+    }
+
+    @Override
+    public ArrayList<String> getAlias()
+    {
+        return null;
     }
 }

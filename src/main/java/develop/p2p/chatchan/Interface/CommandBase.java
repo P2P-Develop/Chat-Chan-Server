@@ -13,4 +13,5 @@ public interface CommandBase
     EnumCommandOutput execute(Player sender, String commandName, ArrayList<String> args, Logger logger) throws Exception;
     String getUsage();
     String getHelp();
+    ArrayList<String> getAlias();
 }
