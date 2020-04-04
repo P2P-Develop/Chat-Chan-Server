@@ -34,7 +34,7 @@ public class ListTextUtil
         if (!file.exists())
             return list;
         ArrayList<String> lists = getListFromFile();
-        list.addAll(lists);
+        list = lists;
         return list;
     }
 
@@ -68,7 +68,7 @@ public class ListTextUtil
 
     public boolean saveDefaultList() throws IOException
     {
-        if (!this.exists())
+        if (this.exists())
             return true;
         return this.save();
     }
