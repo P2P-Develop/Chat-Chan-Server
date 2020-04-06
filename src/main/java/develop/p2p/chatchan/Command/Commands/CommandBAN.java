@@ -28,7 +28,7 @@ public class CommandBAN implements CommandBase
         }
         else if (Main.blackList.isBlackListed(args.get(0)))
         {
-            logger.error("[BAN] Player " + args.get(0) + " is been banned.\n");
+            logger.error("[BAN] Player " + args.get(0) + " is already banned.\n");
             return EnumCommandOutput.OK;
         }
         ip = args.get(0);
@@ -48,7 +48,7 @@ public class CommandBAN implements CommandBase
     @Override
     public String getHelp()
     {
-        return "add ban players.";
+        return "add players to blaclist.";
     }
 
     @Override
