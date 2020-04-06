@@ -1,6 +1,6 @@
 package develop.p2p.chatchan.Command.Commands;
 
-import com.sun.deploy.trace.LoggerTraceListener;
+
 import develop.p2p.chatchan.Enum.EnumCommandOutput;
 import develop.p2p.chatchan.Interface.CommandBase;
 import develop.p2p.chatchan.Main;

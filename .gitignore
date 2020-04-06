@@ -5,6 +5,5 @@ log/
 .flooignore
 
 
-#debug
-blacklist.lst
-config.xml
+/config.xml
+/blacklist.lst
