@@ -1,6 +1,6 @@
 package develop.p2p.chatchan.util;
 
-import java.util.Arrays;
+import java.util.*;
 
 public class IntToString
 {

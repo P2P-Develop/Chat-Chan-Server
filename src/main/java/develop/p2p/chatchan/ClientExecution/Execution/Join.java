@@ -1,16 +1,15 @@
 package develop.p2p.chatchan.ClientExecution.Execution;
 
 import com.fasterxml.jackson.databind.*;
-import develop.p2p.chatchan.Init.BlackList;
-import develop.p2p.chatchan.Interface.ClientExecutionBase;
-import develop.p2p.chatchan.Main;
-import develop.p2p.chatchan.Message.EncryptManager;
-import develop.p2p.chatchan.Player.Player;
+import develop.p2p.chatchan.Interface.*;
+import develop.p2p.chatchan.*;
+import develop.p2p.chatchan.Message.*;
+import develop.p2p.chatchan.Player.*;
 import develop.p2p.chatchan.Server.Thread.*;
-import org.slf4j.Logger;
+import org.slf4j.*;
 
 import java.io.*;
-import java.net.Socket;
+import java.net.*;
 
 public class Join implements ClientExecutionBase
 {

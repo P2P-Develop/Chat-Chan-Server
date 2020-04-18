@@ -1,11 +1,11 @@
 package develop.p2p.chatchan.Command;
 
-import develop.p2p.chatchan.Enum.EnumCommandOutput;
-import develop.p2p.chatchan.Interface.CommandBase;
-import develop.p2p.chatchan.Player.Player;
-import org.slf4j.Logger;
+import develop.p2p.chatchan.Enum.*;
+import develop.p2p.chatchan.Interface.*;
+import develop.p2p.chatchan.Player.*;
+import org.slf4j.*;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class CommandCoreBUS
 {
@@ -39,7 +39,7 @@ public class CommandCoreBUS
             ArrayList<String> aliases = command.getAlias();
             if (command.getName().equals(commandName))
                 output = command.execute(sender, commandName, args, logger);
-            else if (aliases != null && aliases.size() != 0)
+            else if (aliases != null)
             {
                 for (String alias: aliases)
                 {

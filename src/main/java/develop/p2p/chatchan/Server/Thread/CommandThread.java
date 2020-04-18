@@ -1,19 +1,16 @@
 package develop.p2p.chatchan.Server.Thread;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.*;
-
 import develop.p2p.chatchan.ClientExecution.Execution.*;
-import develop.p2p.chatchan.ClientExecution.ExecutionCoreBUS;
-import develop.p2p.chatchan.Enum.EnumServerType;
-import develop.p2p.chatchan.Main;
-import develop.p2p.chatchan.Player.Player;
-import develop.p2p.chatchan.util.JsonObj;
-
-import org.slf4j.Logger;
+import develop.p2p.chatchan.ClientExecution.*;
+import develop.p2p.chatchan.Enum.*;
+import develop.p2p.chatchan.*;
+import develop.p2p.chatchan.Player.*;
+import develop.p2p.chatchan.util.*;
+import org.slf4j.*;
 
 import java.io.*;
-import java.net.Socket;
+import java.net.*;
 
 public class CommandThread extends Thread
 {

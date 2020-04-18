@@ -1,7 +1,7 @@
 package develop.p2p.chatchan.util;
 
 import java.io.*;
-import java.util.ArrayList;
+import java.util.*;
 
 public class ListTextUtil
 {

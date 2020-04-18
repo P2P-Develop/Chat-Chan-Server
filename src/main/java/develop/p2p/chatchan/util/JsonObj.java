@@ -1,8 +1,8 @@
 package develop.p2p.chatchan.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.*;
 
-import java.io.IOException;
+import java.io.*;
 
 public class JsonObj
 {

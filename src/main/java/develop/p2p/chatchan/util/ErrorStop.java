@@ -1,6 +1,6 @@
 package develop.p2p.chatchan.util;
 
-import develop.p2p.chatchan.Main;
+import develop.p2p.chatchan.*;
 
 public class ErrorStop
 {

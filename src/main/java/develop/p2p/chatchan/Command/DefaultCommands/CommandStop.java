@@ -1,12 +1,12 @@
-package develop.p2p.chatchan.Command.Commands;
+package develop.p2p.chatchan.Command.DefaultCommands;
 
-import develop.p2p.chatchan.Enum.EnumCommandOutput;
-import develop.p2p.chatchan.Interface.CommandBase;
-import develop.p2p.chatchan.Main;
-import develop.p2p.chatchan.Player.Player;
-import org.slf4j.Logger;
+import develop.p2p.chatchan.Enum.*;
+import develop.p2p.chatchan.Interface.*;
+import develop.p2p.chatchan.*;
+import develop.p2p.chatchan.Player.*;
+import org.slf4j.*;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class CommandStop implements CommandBase
 {
