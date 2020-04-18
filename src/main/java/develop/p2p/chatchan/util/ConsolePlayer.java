@@ -1,6 +1,6 @@
 package develop.p2p.chatchan.util;
 
-import develop.p2p.chatchan.Player.Player;
+import develop.p2p.chatchan.Player.*;
 
 public class ConsolePlayer extends Player
 {

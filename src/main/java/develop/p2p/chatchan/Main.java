@@ -1,13 +1,12 @@
 package develop.p2p.chatchan;
 
-import develop.p2p.chatchan.Command.Commands.*;
-import develop.p2p.chatchan.Command.CommandCoreBUS;
-import develop.p2p.chatchan.Enum.EnumCommandOutput;
+import develop.p2p.chatchan.Command.*;
+import develop.p2p.chatchan.Command.DefaultCommands.*;
+import develop.p2p.chatchan.Enum.*;
 import develop.p2p.chatchan.Init.*;
-import develop.p2p.chatchan.Player.PlayerList;
+import develop.p2p.chatchan.Player.*;
 import develop.p2p.chatchan.Server.*;
-import develop.p2p.chatchan.util.ConsolePlayer;
-
+import develop.p2p.chatchan.util.*;
 import org.slf4j.*;
 
 import java.util.*;

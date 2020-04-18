@@ -1,11 +1,10 @@
 package develop.p2p.chatchan.Interface;
 
-import develop.p2p.chatchan.Enum.EnumCommandOutput;
-import develop.p2p.chatchan.Player.Player;
+import develop.p2p.chatchan.Enum.*;
+import develop.p2p.chatchan.Player.*;
+import org.slf4j.*;
 
-import org.slf4j.Logger;
-
-import java.util.ArrayList;
+import java.util.*;
 
 public interface CommandBase
 {

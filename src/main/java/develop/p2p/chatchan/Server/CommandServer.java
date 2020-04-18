@@ -1,10 +1,10 @@
 package develop.p2p.chatchan.Server;
 
-import develop.p2p.chatchan.Interface.ServerThreadBase;
-import develop.p2p.chatchan.Main;
-import develop.p2p.chatchan.Server.Thread.ChatThread;
+import develop.p2p.chatchan.Interface.*;
+import develop.p2p.chatchan.*;
+import develop.p2p.chatchan.Server.Thread.*;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
 
 public class CommandServer implements ServerThreadBase

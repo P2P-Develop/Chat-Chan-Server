@@ -1,13 +1,12 @@
-package develop.p2p.chatchan.Command.Commands;
+package develop.p2p.chatchan.Command.DefaultCommands;
 
+import develop.p2p.chatchan.Enum.*;
+import develop.p2p.chatchan.Interface.*;
+import develop.p2p.chatchan.*;
+import develop.p2p.chatchan.Player.*;
+import org.slf4j.*;
 
-import develop.p2p.chatchan.Enum.EnumCommandOutput;
-import develop.p2p.chatchan.Interface.CommandBase;
-import develop.p2p.chatchan.Main;
-import develop.p2p.chatchan.Player.Player;
-import org.slf4j.Logger;
-
-import java.util.ArrayList;
+import java.util.*;
 
 public class CommandBAN implements CommandBase
 {
@@ -48,7 +47,7 @@ public class CommandBAN implements CommandBase
     @Override
     public String getHelp()
     {
-        return "add players to blaclist.";
+        return "add players to blacklist.";
     }
 
     @Override

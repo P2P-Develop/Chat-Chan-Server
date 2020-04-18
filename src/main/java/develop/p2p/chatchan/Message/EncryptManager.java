@@ -1,13 +1,12 @@
 package develop.p2p.chatchan.Message;
 
-import develop.p2p.chatchan.util.IntToString;
-import develop.p2p.chatchan.Main;
+import develop.p2p.chatchan.*;
+import develop.p2p.chatchan.util.*;
 
+import javax.crypto.*;
+import javax.crypto.spec.*;
 import java.security.*;
 import java.util.*;
-
-import javax.crypto.spec.SecretKeySpec;
-import javax.crypto.*;
 
 public class EncryptManager
 {

@@ -1,11 +1,11 @@
 package develop.p2p.chatchan.Interface;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import develop.p2p.chatchan.Player.Player;
+import com.fasterxml.jackson.databind.*;
+import develop.p2p.chatchan.Player.*;
 import develop.p2p.chatchan.Server.Thread.*;
-import org.slf4j.Logger;
+import org.slf4j.*;
 
-import java.net.Socket;
+import java.net.*;
 
 public interface ClientExecutionBase
 {
